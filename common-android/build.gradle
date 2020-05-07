@@ -24,6 +24,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
@@ -50,12 +51,14 @@ dependencies {
     api Libs.AndroidX.Lifecycle.extensions
     api Libs.AndroidX.Lifecycle.viewModel
     api Libs.Google.material
-    api Libs.threeTenAndroid
 
     testImplementation Libs.Test.robolectric
     testImplementation Libs.AndroidX.Test.core
     testImplementation Libs.AndroidX.Test.runner
     testImplementation Libs.Test.assertJ
+
     androidTestImplementation Libs.AndroidX.Test.runner
     androidTestImplementation Libs.AndroidX.Test.espressoCore
+
+    coreLibraryDesugaring Libs.androidDesugarJdkLibs
 }

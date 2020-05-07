@@ -5,5 +5,4 @@ apply plugin: 'kotlin'
 dependencies {
     implementation Libs.Kotlin.stdlib
     api Libs.AndroidX.Room.common
-    api Libs.threeTenAndroid
 }

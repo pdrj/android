@@ -27,6 +27,11 @@ android {
         adhoc {}
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
+    }
 }
 
 dependencies {
@@ -35,10 +40,11 @@ dependencies {
     implementation Libs.Kotlin.stdlib
     implementation Libs.Dagger.dagger
     kapt Libs.Dagger.compiler
-    api Libs.threeTenAndroid
     api Libs.Google.firebaseAnalytics
     api Libs.Microsoft.appCenterAnalytics
 
     androidTestImplementation Libs.AndroidX.Test.runner
     androidTestImplementation Libs.AndroidX.Test.espressoCore
+
+    coreLibraryDesugaring Libs.androidDesugarJdkLibs
 }

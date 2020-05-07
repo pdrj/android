@@ -6,12 +6,11 @@ object Versions {
 
 object Libs {
     const val androidGradlePlugin = "com.android.tools.build:gradle:3.6.1"
+    const val androidDesugarJdkLibs = "com.android.tools:desugar_jdk_libs:1.0.5"
     const val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.28.0"
     const val leakCanary = "com.squareup.leakcanary:leakcanary-android:2.2"
     // fixes warning thrown by SLF4J
     const val slf4j = "org.slf4j:slf4j-simple:1.7.26"
-    const val threeTen = "org.threeten:threetenbp:1.4.2"
-    const val threeTenAndroid = "com.jakewharton.threetenabp:threetenabp:1.2.2"
 
     object Test {
         const val junit4 = "junit:junit:4.13"
