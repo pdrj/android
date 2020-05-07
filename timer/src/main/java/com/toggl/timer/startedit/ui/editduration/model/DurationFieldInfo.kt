@@ -1,7 +1,7 @@
 package com.toggl.timer.startedit.ui.editduration.model
 
 import com.toggl.timer.startedit.util.MathConstants
-import org.threeten.bp.Duration
+import java.time.Duration
 import kotlin.math.min
 
 data class DurationFieldInfo(val digits: List<Int> = emptyList()) {

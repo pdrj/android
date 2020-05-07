@@ -19,10 +19,10 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.FreeSpec
 import io.mockk.every
 import io.mockk.mockk
-import org.threeten.bp.Duration
-import org.threeten.bp.OffsetDateTime
-import org.threeten.bp.Year
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.Duration
+import java.time.OffsetDateTime
+import java.time.Year
+import java.time.format.DateTimeFormatter
 
 class TimeEntriesLogSelectorTests : FreeSpec(
 {

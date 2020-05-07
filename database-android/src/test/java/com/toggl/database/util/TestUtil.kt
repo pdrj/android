@@ -9,9 +9,9 @@ import com.toggl.database.models.DatabaseTimeEntry
 import com.toggl.database.models.DatabaseTimeEntryWithTags
 import com.toggl.database.models.DatabaseWorkspace
 import com.toggl.models.domain.WorkspaceFeature
-import org.threeten.bp.Duration
-import org.threeten.bp.OffsetDateTime
-import org.threeten.bp.ZoneOffset
+import java.time.Duration
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 fun BaseDatabaseTest.defaultWorkspaceId(): Long {
     val workspaces = database.workspaceDao().getAll()

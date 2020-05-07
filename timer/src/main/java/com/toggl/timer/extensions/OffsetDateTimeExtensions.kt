@@ -1,10 +1,10 @@
 package com.toggl.timer.extensions
 
 import com.toggl.timer.startedit.util.MathConstants
-import org.threeten.bp.Duration
-import org.threeten.bp.OffsetDateTime
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.temporal.ChronoUnit
+import java.time.Duration
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import kotlin.math.absoluteValue
 
 val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")

@@ -3,10 +3,10 @@ package com.toggl.timer.generators
 import com.toggl.models.domain.TimeEntry
 import com.toggl.timer.common.createTimeEntry
 import io.kotlintest.properties.Gen
-import org.threeten.bp.Duration
-import org.threeten.bp.Month
-import org.threeten.bp.OffsetDateTime
-import org.threeten.bp.Year
+import java.time.Duration
+import java.time.Month
+import java.time.OffsetDateTime
+import java.time.Year
 
 fun Gen.Companion.timeEntries(
     description: String? = null,

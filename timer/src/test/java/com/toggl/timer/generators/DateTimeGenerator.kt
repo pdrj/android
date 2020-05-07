@@ -1,10 +1,10 @@
 package com.toggl.timer.generators
 
 import io.kotlintest.properties.Gen
-import org.threeten.bp.Month
-import org.threeten.bp.OffsetDateTime
-import org.threeten.bp.Year
-import org.threeten.bp.ZoneOffset
+import java.time.Month
+import java.time.OffsetDateTime
+import java.time.Year
+import java.time.ZoneOffset
 import kotlin.random.Random
 
 fun Gen.Companion.threeTenOffsetDateTime(

@@ -1,6 +1,6 @@
 package com.toggl.timer.extensions
 
-import org.threeten.bp.Duration
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 fun Duration.formatForDisplaying(): String {

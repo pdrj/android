@@ -10,8 +10,8 @@ import androidx.room.Update
 import com.toggl.database.models.DatabaseTimeEntry
 import com.toggl.database.models.DatabaseTimeEntryTag
 import com.toggl.database.models.DatabaseTimeEntryWithTags
-import org.threeten.bp.Duration
-import org.threeten.bp.OffsetDateTime
+import java.time.Duration
+import java.time.OffsetDateTime
 
 typealias StartTimeEntryDatabaseResult = Pair<DatabaseTimeEntry, List<DatabaseTimeEntry>>
 

@@ -5,7 +5,7 @@ import com.toggl.environment.services.analytics.AnalyticsService
 import com.toggl.environment.services.analytics.AppCenterAnalyticsService
 import com.toggl.environment.services.analytics.CompositeAnalyticsService
 import com.toggl.environment.services.analytics.FirebaseAnalyticsService
-import com.toggl.environment.services.time.ThreeTenTimeService
+import com.toggl.environment.services.time.JavaTimeService
 import com.toggl.environment.services.time.TimeService
 import dagger.Module
 import dagger.Provides
@@ -16,7 +16,7 @@ class EnvironmentModule {
     @Provides
     @Singleton
     fun timeService(): TimeService =
-        ThreeTenTimeService()
+        JavaTimeService()
 
     @Provides
     @Singleton

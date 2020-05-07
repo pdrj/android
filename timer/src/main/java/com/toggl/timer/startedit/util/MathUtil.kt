@@ -5,7 +5,7 @@ import com.toggl.timer.startedit.util.MathConstants.fullCircle
 import com.toggl.timer.startedit.util.MathConstants.minutesInAnHour
 import com.toggl.timer.startedit.util.MathConstants.quarterOfCircle
 import com.toggl.timer.startedit.util.MathConstants.secondsInAMinute
-import org.threeten.bp.Duration
+import java.time.Duration
 
 object MathConstants {
     const val quarterOfCircle: Double = 0.5f * kotlin.math.PI

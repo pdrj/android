@@ -2,8 +2,8 @@ package com.toggl.timer.common.domain
 
 import arrow.optics.optics
 import com.toggl.models.domain.TimeEntry
-import org.threeten.bp.Duration
-import org.threeten.bp.OffsetDateTime
+import java.time.Duration
+import java.time.OffsetDateTime
 
 @optics
 data class EditableTimeEntry(

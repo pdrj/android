@@ -24,7 +24,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.asFlow
-import org.threeten.bp.Duration
+import java.time.Duration
 
 @ExperimentalCoroutinesApi
 @FlowPreview

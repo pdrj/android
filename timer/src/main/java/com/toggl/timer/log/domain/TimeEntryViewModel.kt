@@ -3,8 +3,8 @@ package com.toggl.timer.log.domain
 import androidx.core.graphics.toColorInt
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
-import org.threeten.bp.Duration
-import org.threeten.bp.OffsetDateTime
+import java.time.Duration
+import java.time.OffsetDateTime
 
 sealed class TimeEntryViewModel
 

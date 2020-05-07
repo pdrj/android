@@ -2,10 +2,10 @@ package com.toggl.database
 
 import androidx.room.TypeConverter
 import com.toggl.models.domain.WorkspaceFeature
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import org.threeten.bp.OffsetDateTime
-import org.threeten.bp.ZoneOffset
+import java.time.Duration
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 class TogglTypeConverters {
     @TypeConverter

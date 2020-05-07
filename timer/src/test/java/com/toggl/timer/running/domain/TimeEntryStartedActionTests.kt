@@ -12,8 +12,7 @@ import io.kotlintest.shouldBe
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-
-import org.threeten.bp.Duration
+import java.time.Duration
 
 @ExperimentalCoroutinesApi
 class TimeEntryStartedActionTests : FreeCoroutineSpec() {

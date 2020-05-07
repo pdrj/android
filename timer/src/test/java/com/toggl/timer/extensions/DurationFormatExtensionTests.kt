@@ -5,7 +5,7 @@ import io.kotlintest.matchers.numerics.shouldBeGreaterThanOrEqual
 import io.kotlintest.properties.Gen
 import io.kotlintest.properties.assertAll
 import io.kotlintest.specs.FreeSpec
-import org.threeten.bp.Duration
+import java.time.Duration
 
 class DurationFormatExtensionTests : FreeSpec({
     "The formatForDisplaying method" - {

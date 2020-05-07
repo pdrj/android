@@ -1,7 +1,7 @@
 package com.toggl.models.domain
 
-import org.threeten.bp.Duration
-import org.threeten.bp.OffsetDateTime
+import java.time.Duration
+import java.time.OffsetDateTime
 
 data class TimeEntry(
     val id: Long = 0,

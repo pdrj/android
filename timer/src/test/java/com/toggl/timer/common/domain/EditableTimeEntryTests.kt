@@ -4,8 +4,8 @@ import com.toggl.timer.common.createTimeEntry
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.threeten.bp.Duration
-import org.threeten.bp.OffsetDateTime
+import java.time.Duration
+import java.time.OffsetDateTime
 
 @DisplayName("EditableTimeEntry")
 internal class EditableTimeEntryTests {

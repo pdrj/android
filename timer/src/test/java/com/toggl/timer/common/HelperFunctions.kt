@@ -5,8 +5,8 @@ import com.toggl.architecture.core.Reducer
 import com.toggl.architecture.core.MutableValue
 import com.toggl.models.domain.TimeEntry
 import io.kotlintest.matchers.collections.shouldBeEmpty
-import org.threeten.bp.Duration
-import org.threeten.bp.OffsetDateTime
+import java.time.Duration
+import java.time.OffsetDateTime
 
 fun createTimeEntry(
     id: Long,

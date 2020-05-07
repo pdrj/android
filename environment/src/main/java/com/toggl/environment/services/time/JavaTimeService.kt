@@ -1,8 +1,8 @@
 package com.toggl.environment.services.time
 
-import org.threeten.bp.OffsetDateTime
+import java.time.OffsetDateTime
 
-class ThreeTenTimeService : TimeService {
+class JavaTimeService : TimeService {
     override fun now(): OffsetDateTime =
         OffsetDateTime.now()
 }

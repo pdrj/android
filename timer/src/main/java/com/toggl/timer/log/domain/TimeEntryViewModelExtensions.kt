@@ -3,7 +3,7 @@ package com.toggl.timer.log.domain
 import com.toggl.models.domain.Client
 import com.toggl.models.domain.Project
 import com.toggl.models.domain.TimeEntry
-import org.threeten.bp.Duration
+import java.time.Duration
 
 fun TimeEntry.toFlatTimeEntryViewModel(projects: Map<Long, Project>, clients: Map<Long, Client>) =
     FlatTimeEntryViewModel(

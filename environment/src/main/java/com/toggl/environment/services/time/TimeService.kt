@@ -1,6 +1,6 @@
 package com.toggl.environment.services.time
 
-import org.threeten.bp.OffsetDateTime
+import java.time.OffsetDateTime
 
 interface TimeService {
     fun now(): OffsetDateTime
