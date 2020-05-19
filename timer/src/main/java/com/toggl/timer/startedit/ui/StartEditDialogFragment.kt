@@ -6,6 +6,7 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +26,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -311,6 +314,20 @@ class StartEditDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private class SimpleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            return object : RecyclerView.ViewHolder(TextView(parent.context).apply {
+                text = "Boom"
+            }) {}
+        }
+
+        override fun getItemCount(): Int = 100
+
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            (holder.itemView as TextView).text = "Boom $position"
+        }
+    }
+
     private fun projectsOrTagsChanged(old: StartEditState, new: StartEditState): Boolean {
         val oldEditableTimeEntry = old.editableTimeEntry ?: return false
         val newEditableTimeEntry = new.editableTimeEntry ?: return false
@@ -362,7 +379,34 @@ class StartEditDialogFragment : BottomSheetDialogFragment() {
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.WRAP_CONTENT
         ).apply { gravity = Gravity.BOTTOM }
+        val recyclerView = RecyclerView(context)
+        recyclerView.layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        ).apply { gravity = Gravity.TOP }
+        recyclerView.adapter = SimpleAdapter()
+        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        containerLayout?.addView(recyclerView, 0)
         containerLayout?.addView(bottomControlPanel)
+        containerLayout?.findViewById<View>(com.google.android.material.R.id.touch_outside)?.apply {
+            visibility = View.GONE
+        }
+        val designBottomSheet = containerLayout?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+
+        val bottomSheetBehavior = (dialog as BottomSheetDialog).behavior
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                val lp = recyclerView.layoutParams as FrameLayout.LayoutParams
+                recyclerView.layoutParams = lp.apply {
+                    height = designBottomSheet?.top ?: lp.height
+                }
+                Log.d("xxaa", "rt: ${recyclerView.top}, rb: ${recyclerView.bottom} - slide: $slideOffset dt: ${designBottomSheet?.top} db: ${designBottomSheet?.bottom}")
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+            }
+        })
 
         bottomControlPanel.post {
             (coordinator?.layoutParams as ViewGroup.MarginLayoutParams).apply {
