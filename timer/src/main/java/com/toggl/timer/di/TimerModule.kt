@@ -1,13 +1,17 @@
 package com.toggl.timer.di
 
+import android.content.Context
 import com.toggl.architecture.core.Store
 import com.toggl.architecture.core.combine
 import com.toggl.architecture.core.pullback
+import com.toggl.environment.services.time.TimeService
+import com.toggl.timer.R
 import com.toggl.timer.common.domain.TimerAction
 import com.toggl.timer.common.domain.TimerReducer
 import com.toggl.timer.common.domain.TimerState
 import com.toggl.timer.log.domain.TimeEntriesLogAction
 import com.toggl.timer.log.domain.TimeEntriesLogReducer
+import com.toggl.timer.log.domain.TimeEntriesLogSelector
 import com.toggl.timer.log.domain.TimeEntriesLogState
 import com.toggl.timer.project.domain.ProjectAction
 import com.toggl.timer.project.domain.ProjectReducer
@@ -15,6 +19,7 @@ import com.toggl.timer.project.domain.ProjectState
 import com.toggl.timer.running.domain.RunningTimeEntryAction
 import com.toggl.timer.running.domain.RunningTimeEntryReducer
 import com.toggl.timer.running.domain.RunningTimeEntryState
+import com.toggl.timer.startedit.domain.ProjectTagChipSelector
 import com.toggl.timer.startedit.domain.StartEditAction
 import com.toggl.timer.startedit.domain.StartEditReducer
 import com.toggl.timer.startedit.domain.StartEditState
@@ -26,6 +31,28 @@ import javax.inject.Singleton
 
 @Module(subcomponents = [TimerComponent::class])
 class TimerModule {
+
+    @Provides
+    internal fun timeEntriesLogSelector(
+        context: Context,
+        timeService: TimeService
+    ): TimeEntriesLogSelector {
+        val todayString = context.getString(R.string.today)
+        val yesterdayString = context.getString(R.string.yesterday)
+
+        return TimeEntriesLogSelector(
+            todayString,
+            yesterdayString,
+            timeService
+        )
+    }
+
+    @Provides
+    internal fun projectTagChipSelector(context: Context) =
+        ProjectTagChipSelector(
+            context.getString(R.string.add_project),
+            context.getString(R.string.add_tags)
+       )
 
     @ExperimentalCoroutinesApi
     @Provides

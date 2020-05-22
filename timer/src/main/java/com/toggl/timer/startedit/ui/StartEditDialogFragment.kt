@@ -28,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.toggl.architecture.extensions.select
 import com.toggl.common.Constants.elapsedTimeIndicatorUpdateDelayMs
 import com.toggl.common.addInterceptingOnClickListener
 import com.toggl.common.deepLinks
@@ -50,9 +51,9 @@ import com.toggl.timer.extensions.formatForDisplayingTime
 import com.toggl.timer.extensions.tryHidingKeyboard
 import com.toggl.timer.extensions.tryShowingKeyboardFor
 import com.toggl.timer.startedit.domain.DateTimePickMode
+import com.toggl.timer.startedit.domain.ProjectTagChipSelector
 import com.toggl.timer.startedit.domain.StartEditAction
 import com.toggl.timer.startedit.domain.StartEditState
-import com.toggl.timer.startedit.domain.projectTagChipSelector
 import com.toggl.timer.startedit.ui.chips.ChipAdapter
 import com.toggl.timer.startedit.ui.chips.ChipViewModel
 import kotlinx.android.synthetic.main.bottom_control_panel_layout.*
@@ -81,6 +82,9 @@ class StartEditDialogFragment : BottomSheetDialogFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var projectTagChipSelector: ProjectTagChipSelector
 
     @Inject
     lateinit var timeService: TimeService
@@ -188,18 +192,9 @@ class StartEditDialogFragment : BottomSheetDialogFragment() {
             }
             .launchIn(lifecycleScope)
 
-        val context = requireContext()
-        val addTagLabel = context.getString(R.string.add_tags)
-        val addProjectLabel = context.getString(R.string.add_project)
-        val curriedTagChipSelector: suspend (StartEditState) -> List<ChipViewModel> = {
-            val editableTimeEntry = it.editableTimeEntry ?: throw EditableProjectShouldNotBeNullException()
-            projectTagChipSelector(addProjectLabel, addTagLabel, editableTimeEntry, it.projects, it.tags)
-        }
-
         store.state
-            .filterNot { it.editableTimeEntry == null }
             .distinctUntilChanged(::projectsOrTagsChanged)
-            .map(curriedTagChipSelector)
+            .select(projectTagChipSelector)
             .onEach { adapter.submitList(it) }
             .launchIn(lifecycleScope)
 

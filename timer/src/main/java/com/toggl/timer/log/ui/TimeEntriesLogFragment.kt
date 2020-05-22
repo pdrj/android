@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.material.snackbar.Snackbar
+import com.toggl.architecture.extensions.select
 import com.toggl.common.Constants.timeEntryDeletionDelayMs
 import com.toggl.common.deepLinks
 import com.toggl.common.performClickHapticFeedback
@@ -20,10 +21,9 @@ import com.toggl.timer.R
 import com.toggl.timer.di.TimerComponentProvider
 import com.toggl.timer.log.domain.FlatTimeEntryViewModel
 import com.toggl.timer.log.domain.TimeEntriesLogAction
-import com.toggl.timer.log.domain.TimeEntriesLogState
+import com.toggl.timer.log.domain.TimeEntriesLogSelector
 import com.toggl.timer.log.domain.TimeEntryGroupViewModel
 import com.toggl.timer.log.domain.TimeEntryViewModel
-import com.toggl.timer.log.domain.timeEntriesLogSelector
 import kotlinx.android.synthetic.main.fragment_time_entries_log.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -40,6 +40,9 @@ class TimeEntriesLogFragment : Fragment(R.layout.fragment_time_entries_log) {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var timeEntriesLogSelector: TimeEntriesLogSelector
 
     private val store: TimeEntriesLogStoreViewModel by viewModels { viewModelFactory }
 
@@ -68,26 +71,8 @@ class TimeEntriesLogFragment : Fragment(R.layout.fragment_time_entries_log) {
         val itemTouchHelper = ItemTouchHelper(swipeCallback)
         itemTouchHelper.attachToRecyclerView(recycler_view)
 
-        val todayString = context.getString(R.string.today)
-        val yesterdayString = context.getString(R.string.yesterday)
-
-        val curriedTimeEntriesSelector: suspend (TimeEntriesLogState) -> List<TimeEntryViewModel> = {
-            timeEntriesLogSelector(
-                it.timeEntries,
-                it.projects,
-                it.clients,
-                timeService,
-                todayString,
-                yesterdayString,
-                true,
-                it.expandedGroupIds,
-                it.entriesPendingDeletion
-            )
-        }
-
         lifecycleScope.launch {
-            store.state
-                .map(curriedTimeEntriesSelector)
+            store.select(timeEntriesLogSelector)
                 .distinctUntilChanged()
                 .onEach { adapter.submitList(it) }
                 .launchIn(this)
