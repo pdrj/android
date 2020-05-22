@@ -68,6 +68,7 @@ dependencies {
     testImplementation Libs.Test.kotlinTest
     testImplementation Libs.Test.kotlinTestJunit
     testImplementation Libs.Test.kotlinCoroutineTest
+    testImplementation Libs.Test.assertJ
 
     androidTestImplementation Libs.AndroidX.Test.runner
     androidTestImplementation Libs.AndroidX.Test.espressoCore
