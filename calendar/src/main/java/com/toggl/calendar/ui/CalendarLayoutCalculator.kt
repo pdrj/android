@@ -29,6 +29,14 @@ class CalendarLayoutCalculator @Inject constructor(private val timeService: Time
             .toList()
     }
 
+    /**
+     * Aggregates the indexed calendar items into buckets. Each bucket contains the sequence of overlapping items.
+     * The items in a bucket don't overlap all with each other, but cannot overlap with items in other buckets.
+     *
+     * @param buckets   The list of agregated items
+     * @param indexedCalendarItem   The item to put in a bucket
+     * @return A list of buckets
+     */
     private fun groupOverlappingItems(
         buckets: CalendarItemGroups,
         indexedCalendarItem: Pair<Int, CalendarItem>
@@ -49,6 +57,13 @@ class CalendarLayoutCalculator @Inject constructor(private val timeService: Time
         return buckets
     }
 
+    /**
+     * Calculates the layout attributes for the indexed calendar items in a bucket.
+     * The calculation is done minimizing the number of columns.
+     *
+     * @param bucket
+     * @return An list of indexed calendar attributes
+     */
     private fun calculateLayoutAttributesFor(bucket: CalendarItemGroup): List<Pair<Int, CalendarItemLayoutAttributes>> {
         val left = bucket.filter { indexedItem -> indexedItem.second is CalendarItem.CalendarEvent }.toMutableList()
         val right = bucket.filter { indexedItem -> indexedItem.second is CalendarItem.TimeEntry }.toMutableList()
@@ -82,6 +97,14 @@ class CalendarLayoutCalculator @Inject constructor(private val timeService: Time
     private fun calculateColumnsForItemsInSource(bucket: CalendarItemGroup): CalendarItemGroups =
         bucket.fold(mutableListOf(), ::convertIntoColumns)
 
+    /**
+     * Aggregates the items into columns, minimizing the number of columns.
+     * This will try to insert an item into the first column without overlapping with other items there,
+     * if that's not possible, will try with the rest of the columns until it's inserted or a new column is required.
+     *
+     * @param bucket
+     * @param indexedItem
+     */
     private fun convertIntoColumns(bucket: CalendarItemGroups, indexedItem: Pair<Int, CalendarItem>): CalendarItemGroups {
         if (bucket.isEmpty()) {
             bucket.add(mutableListOf(indexedItem))
@@ -99,6 +122,13 @@ class CalendarLayoutCalculator @Inject constructor(private val timeService: Time
         return bucket
     }
 
+    /**
+     * Returns the column and position in that column to insert the new item.
+     * If the item cannot be inserted, the column is null.
+     *
+     * @param columns
+     * @param item
+     */
     private fun columnAndPositionToInsertItem(
         columns: CalendarItemGroups,
         item: Pair<Int, CalendarItem>
