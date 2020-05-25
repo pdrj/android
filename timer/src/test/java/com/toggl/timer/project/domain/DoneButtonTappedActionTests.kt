@@ -3,7 +3,7 @@ package com.toggl.timer.project.domain
 import com.toggl.repository.interfaces.ProjectRepository
 import com.toggl.timer.common.CoroutineTest
 import com.toggl.timer.common.assertNoEffectsWereReturned
-import com.toggl.timer.common.domain.EditableProject
+import com.toggl.models.domain.EditableProject
 import com.toggl.timer.common.testReduce
 import com.toggl.timer.exceptions.EditableProjectShouldNotBeNullException
 import io.kotlintest.shouldBe

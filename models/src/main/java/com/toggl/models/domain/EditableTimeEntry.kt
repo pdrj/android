@@ -1,7 +1,6 @@
-package com.toggl.timer.common.domain
+package com.toggl.models.domain
 
 import arrow.optics.optics
-import com.toggl.models.domain.TimeEntry
 import org.threeten.bp.Duration
 import org.threeten.bp.OffsetDateTime
 

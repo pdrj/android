@@ -2,7 +2,7 @@ package com.toggl.timer.project.domain
 
 import com.toggl.timer.common.CoroutineTest
 import com.toggl.timer.common.assertNoEffectsWereReturned
-import com.toggl.timer.common.domain.EditableProject
+import com.toggl.models.domain.EditableProject
 import com.toggl.timer.common.testReduce
 import com.toggl.timer.common.toMutableValue
 import com.toggl.timer.exceptions.EditableProjectShouldNotBeNullException

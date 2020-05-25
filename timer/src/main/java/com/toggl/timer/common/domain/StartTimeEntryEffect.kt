@@ -2,6 +2,7 @@ package com.toggl.timer.common.domain
 
 import com.toggl.architecture.DispatcherProvider
 import com.toggl.architecture.core.Effect
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.repository.interfaces.StartTimeEntryResult
 import com.toggl.repository.interfaces.TimeEntryRepository
 import kotlinx.coroutines.withContext

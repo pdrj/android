@@ -7,7 +7,7 @@ import com.toggl.models.common.AutocompleteSuggestion
 import com.toggl.models.domain.TimeEntry
 import com.toggl.models.domain.Workspace
 import com.toggl.repository.Repository
-import com.toggl.timer.common.domain.EditableTimeEntry
+import com.toggl.models.domain.EditableTimeEntry
 import io.mockk.mockk
 
 fun createInitialState(

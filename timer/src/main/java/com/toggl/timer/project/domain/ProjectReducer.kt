@@ -8,9 +8,9 @@ import com.toggl.architecture.extensions.effect
 import com.toggl.architecture.core.Reducer
 import com.toggl.common.feature.extensions.returnEffect
 import com.toggl.repository.interfaces.ProjectRepository
-import com.toggl.timer.common.domain.EditableProject
-import com.toggl.timer.common.domain.isValid
-import com.toggl.timer.common.domain.toDto
+import com.toggl.models.domain.EditableProject
+import com.toggl.models.domain.isValid
+import com.toggl.repository.extensions.toDto
 import com.toggl.timer.exceptions.EditableProjectShouldNotBeNullException
 import javax.inject.Inject
 

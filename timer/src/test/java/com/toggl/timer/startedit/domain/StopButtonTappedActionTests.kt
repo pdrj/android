@@ -1,7 +1,7 @@
 package com.toggl.timer.startedit.domain
 
 import com.toggl.environment.services.time.TimeService
-import com.toggl.timer.common.domain.EditableTimeEntry
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.timer.common.testReduce
 import com.toggl.timer.common.testReduceNoEffects
 import com.toggl.timer.common.testReduceState
@@ -34,7 +34,11 @@ class StopButtonTappedActionTests {
     }
 
     private fun createEditableTimeEntry(startTime: OffsetDateTime?, duration: Duration?) =
-        EditableTimeEntry(workspaceId = 1, startTime = startTime, duration = duration)
+        EditableTimeEntry(
+            workspaceId = 1,
+            startTime = startTime,
+            duration = duration
+        )
 
     @Nested
     @DisplayName("For time entries that were started less than 999 hours ago")

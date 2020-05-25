@@ -3,7 +3,7 @@ package com.toggl.timer.startedit.domain
 import com.toggl.models.domain.Project
 import com.toggl.models.domain.Tag
 import com.toggl.timer.common.createTimeEntry
-import com.toggl.timer.common.domain.EditableTimeEntry
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.timer.project.domain.createProject
 import com.toggl.timer.startedit.ui.chips.ChipViewModel
 import io.kotlintest.matchers.boolean.shouldBeTrue

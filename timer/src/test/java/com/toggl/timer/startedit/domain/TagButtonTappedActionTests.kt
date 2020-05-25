@@ -1,7 +1,7 @@
 package com.toggl.timer.startedit.domain
 
 import com.toggl.timer.common.assertNoEffectsWereReturned
-import com.toggl.timer.common.domain.EditableTimeEntry
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.timer.common.testReduce
 import com.toggl.timer.common.toMutableValue
 import com.toggl.timer.exceptions.EditableTimeEntryShouldNotBeNullException
@@ -36,7 +36,8 @@ internal class TagButtonTappedActionTests {
 
     @Test
     fun `should append # to description and return no effects`() = runBlockingTest {
-        val editableWithDescription = EditableTimeEntry(listOf(), 1, "asdf", null, null, false, null)
+        val editableWithDescription =
+            EditableTimeEntry(listOf(), 1, "asdf", null, null, false, null)
 
         reducer.testReduce(initialState.copy(editableTimeEntry = editableWithDescription), StartEditAction.TagButtonTapped) { state, effects ->
             state.editableTimeEntry!!.description shouldBe editableWithDescription.description + " #"

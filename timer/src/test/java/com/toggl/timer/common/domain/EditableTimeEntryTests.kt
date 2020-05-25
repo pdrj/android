@@ -1,5 +1,6 @@
 package com.toggl.timer.common.domain
 
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.timer.common.createTimeEntry
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.DisplayName

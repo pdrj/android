@@ -1,8 +1,6 @@
-package com.toggl.timer.common.domain
+package com.toggl.models.domain
 
 import arrow.optics.optics
-import com.toggl.models.domain.Project
-import com.toggl.repository.dto.CreateProjectDTO
 
 @optics
 data class EditableProject(
@@ -24,16 +22,6 @@ data class EditableProject(
         fun empty(workspaceId: Long) = EditableProject(workspaceId = workspaceId)
     }
 }
-
-fun EditableProject.toDto() = CreateProjectDTO(
-    name,
-    color,
-    active,
-    isPrivate,
-    billable,
-    workspaceId,
-    clientId
-)
 
 fun EditableProject.isValid(projects: Collection<Project>): Boolean =
     projects.none {

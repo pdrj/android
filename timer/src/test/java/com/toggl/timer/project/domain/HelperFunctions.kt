@@ -2,7 +2,7 @@ package com.toggl.timer.project.domain
 
 import com.toggl.models.domain.Project
 import com.toggl.models.domain.Task
-import com.toggl.timer.common.domain.EditableProject
+import com.toggl.models.domain.EditableProject
 
 fun createInitialState(
     editableProject: EditableProject? = null,

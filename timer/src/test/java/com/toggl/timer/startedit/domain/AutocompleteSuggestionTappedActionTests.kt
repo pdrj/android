@@ -8,8 +8,8 @@ import com.toggl.models.domain.TimeEntry
 import com.toggl.timer.common.CoroutineTest
 import com.toggl.timer.common.createTask
 import com.toggl.timer.common.createTimeEntry
-import com.toggl.timer.common.domain.EditableProject
-import com.toggl.timer.common.domain.EditableTimeEntry
+import com.toggl.models.domain.EditableProject
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.timer.common.testReduceEffects
 import com.toggl.timer.common.testReduceException
 import com.toggl.timer.common.testReduceNoEffects
@@ -318,7 +318,10 @@ internal class AutocompleteSuggestionTappedActionTests : CoroutineTest() {
             ) {
                 it shouldBe initialState.copy(
                     editableTimeEntry = initialEditableTimeEntry.copy(
-                        editableProject = EditableProject(name = projectName, workspaceId = 1)
+                        editableProject = EditableProject(
+                            name = projectName,
+                            workspaceId = 1
+                        )
                     )
                 )
             }

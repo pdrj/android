@@ -1,6 +1,6 @@
 package com.toggl.timer.common.domain.extensions
 
-import com.toggl.timer.common.domain.EditableTimeEntry
+import com.toggl.models.domain.EditableTimeEntry
 
 fun EditableTimeEntry.isNew() = this.startTime == null
 fun EditableTimeEntry.isRunning() = this.duration == null

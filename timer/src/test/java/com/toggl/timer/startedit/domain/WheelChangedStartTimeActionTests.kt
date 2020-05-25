@@ -1,7 +1,7 @@
 package com.toggl.timer.startedit.domain
 
 import com.toggl.environment.services.time.TimeService
-import com.toggl.timer.common.domain.EditableTimeEntry
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.timer.common.testReduceState
 import io.kotlintest.shouldBe
 import io.mockk.every
@@ -25,7 +25,11 @@ class WheelChangedStartTimeActionTests {
     val reducer = createReducer(timeService = timeService)
 
     private fun createEditableTimeEntry(startTime: OffsetDateTime?, duration: Duration?) =
-        EditableTimeEntry(workspaceId = 1, startTime = startTime, duration = duration)
+        EditableTimeEntry(
+            workspaceId = 1,
+            startTime = startTime,
+            duration = duration
+        )
 
     companion object {
         val now: OffsetDateTime = OffsetDateTime.of(2020, 1, 1, 10, 0, 0, 0, ZoneOffset.UTC)

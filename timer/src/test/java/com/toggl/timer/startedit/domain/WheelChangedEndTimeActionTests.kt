@@ -3,7 +3,7 @@ package com.toggl.timer.startedit.domain
 import com.toggl.common.Constants
 import com.toggl.environment.services.time.TimeService
 import com.toggl.timer.common.assertNoEffectsWereReturned
-import com.toggl.timer.common.domain.EditableTimeEntry
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.timer.common.testReduce
 import com.toggl.timer.common.testReduceException
 import com.toggl.timer.common.testReduceState

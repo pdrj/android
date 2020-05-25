@@ -41,7 +41,7 @@ import com.toggl.environment.services.time.TimeService
 import com.toggl.models.domain.Workspace
 import com.toggl.models.domain.WorkspaceFeature
 import com.toggl.timer.R
-import com.toggl.timer.common.domain.EditableTimeEntry
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.timer.di.TimerComponentProvider
 import com.toggl.timer.exceptions.EditableProjectShouldNotBeNullException
 import com.toggl.timer.extensions.formatForDisplaying
@@ -564,7 +564,7 @@ class StartEditDialogFragment : BottomSheetDialogFragment() {
     private fun EditableTimeEntry.isRunning() = this.ids.size == 1 && this.startTime != null && this.duration == null
     private fun EditableTimeEntry.isStopped() = this.startTime != null && this.duration != null
     private fun EditableTimeEntry.getDurationForDisplaying() = when {
-        this.duration != null -> this.duration
+        this.duration != null -> this.duration!!
         this.isNotStarted() && this.startTime == null -> Duration.ZERO
         this.startTime != null -> Duration.between(this.startTime, timeService.now())
         else -> throw IllegalStateException("Editable time entry must either have a duration, a start time or not be started yet (have no ids)")

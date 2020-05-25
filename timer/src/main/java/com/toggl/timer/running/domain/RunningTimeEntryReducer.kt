@@ -8,7 +8,7 @@ import com.toggl.architecture.core.MutableValue
 import com.toggl.architecture.extensions.effect
 import com.toggl.environment.services.time.TimeService
 import com.toggl.repository.interfaces.TimeEntryRepository
-import com.toggl.timer.common.domain.EditableTimeEntry
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.timer.common.domain.StartTimeEntryEffect
 import com.toggl.timer.common.domain.StopTimeEntryEffect
 import com.toggl.timer.common.domain.handleTimeEntryCreationStateChanges

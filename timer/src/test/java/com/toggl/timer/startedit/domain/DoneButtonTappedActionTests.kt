@@ -5,7 +5,7 @@ import com.toggl.repository.Repository
 import com.toggl.repository.interfaces.StartTimeEntryResult
 import com.toggl.timer.common.FreeCoroutineSpec
 import com.toggl.timer.common.createTimeEntry
-import com.toggl.timer.common.domain.EditableTimeEntry
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.timer.common.toMutableValue
 import com.toggl.timer.exceptions.EditableTimeEntryShouldNotBeNullException
 import io.kotlintest.TestCase

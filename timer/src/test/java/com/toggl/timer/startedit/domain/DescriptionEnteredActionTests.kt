@@ -3,7 +3,7 @@ package com.toggl.timer.startedit.domain
 import com.toggl.models.domain.Workspace
 import com.toggl.timer.common.CoroutineTest
 import com.toggl.timer.common.createTimeEntry
-import com.toggl.timer.common.domain.EditableTimeEntry
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.timer.common.testReduce
 import io.kotlintest.shouldBe
 import io.mockk.every

@@ -2,7 +2,7 @@ package com.toggl.timer.running.domain
 
 import arrow.optics.optics
 import com.toggl.models.domain.TimeEntry
-import com.toggl.timer.common.domain.EditableTimeEntry
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.timer.common.domain.TimerState
 
 @optics

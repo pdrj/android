@@ -4,6 +4,7 @@ import arrow.optics.Lens
 import arrow.optics.optics
 import com.toggl.models.common.AutocompleteSuggestion
 import com.toggl.models.domain.Client
+import com.toggl.models.domain.EditableTimeEntry
 import com.toggl.models.domain.Project
 import com.toggl.models.domain.Tag
 import com.toggl.models.domain.Task
