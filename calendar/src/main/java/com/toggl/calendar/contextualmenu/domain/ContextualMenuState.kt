@@ -1,14 +1,12 @@
 package com.toggl.calendar.contextualmenu.domain
 
-import arrow.core.Either
 import arrow.optics.optics
 import com.toggl.calendar.common.domain.CalendarState
-import com.toggl.environment.services.calendar.CalendarEvent
-import com.toggl.models.domain.TimeEntry
+import com.toggl.calendar.common.domain.SelectedCalendarItem
 
 @optics
 data class ContextualMenuState(
-    val selectedItem: Either<TimeEntry, CalendarEvent>?
+    val selectedItem: SelectedCalendarItem?
 ) {
     companion object {
         fun fromCalendarState(calendarState: CalendarState) =

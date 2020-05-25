@@ -1,6 +1,8 @@
-package com.toggl.calendar.domain
+package com.toggl.calendar.calendarday.domain
 
 import com.toggl.calendar.common.createTimeEntry
+import com.toggl.calendar.common.domain.CalendarItem
+import com.toggl.calendar.common.domain.SelectedCalendarItem
 import com.toggl.calendar.common.testReduceNoEffects
 import com.toggl.calendar.common.testReduceState
 import com.toggl.environment.services.calendar.CalendarEvent
@@ -17,8 +19,8 @@ import org.threeten.bp.OffsetDateTime
 @DisplayName("The ItemTappedActionTests action")
 internal class ItemTappedActionTests {
 
-    private val state = CalendarState(tasks = emptyMap(), selectedItem = null)
-    private val reducer = CalendarReducer()
+    private val state = CalendarDayState(mapOf(), null, OffsetDateTime.now())
+    private val reducer = CalendarDayReducer()
 
     private val timeEntry = createTimeEntry(1)
     private val calendarEvent = CalendarEvent("1", OffsetDateTime.now(), Duration.ofSeconds(10), "", "", "")
@@ -30,7 +32,7 @@ internal class ItemTappedActionTests {
     fun `should set selectedItem correctly when timeEntry is tapped`() = runBlockingTest {
         reducer.testReduceState(
             state,
-            CalendarAction.ItemTapped(timeEntryItemToBeSelected)
+            CalendarDayAction.ItemTapped(timeEntryItemToBeSelected)
         ) { state ->
             state shouldBe state.copy(selectedItem = SelectedCalendarItem.SelectedTimeEntry(EditableTimeEntry.fromSingle(timeEntry)))
         }
@@ -40,7 +42,7 @@ internal class ItemTappedActionTests {
     fun `should set selectedItem correctly when calendarEvent is tapped`() = runBlockingTest {
         reducer.testReduceState(
             state,
-            CalendarAction.ItemTapped(calendarEventItemToBeSelected)
+            CalendarDayAction.ItemTapped(calendarEventItemToBeSelected)
         ) { state ->
             state shouldBe state.copy(selectedItem = SelectedCalendarItem.SelectedCalendarEvent(calendarEvent))
         }
@@ -48,7 +50,7 @@ internal class ItemTappedActionTests {
 
     @Test
     fun `shouldn't return any effect`() = runBlockingTest {
-        reducer.testReduceNoEffects(state, CalendarAction.ItemTapped(timeEntryItemToBeSelected))
-        reducer.testReduceNoEffects(state, CalendarAction.ItemTapped(calendarEventItemToBeSelected))
+        reducer.testReduceNoEffects(state, CalendarDayAction.ItemTapped(timeEntryItemToBeSelected))
+        reducer.testReduceNoEffects(state, CalendarDayAction.ItemTapped(calendarEventItemToBeSelected))
     }
 }

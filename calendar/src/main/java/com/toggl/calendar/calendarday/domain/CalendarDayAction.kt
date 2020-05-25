@@ -1,9 +1,10 @@
 package com.toggl.calendar.calendarday.domain
 
 import com.toggl.calendar.common.domain.CalendarAction
+import com.toggl.calendar.common.domain.CalendarItem
 
 sealed class CalendarDayAction {
-    object ExampleAction : CalendarDayAction()
+    data class ItemTapped(val calendarItem: CalendarItem) : CalendarDayAction()
 
     companion object {
         fun fromCalendarAction(calendarAction: CalendarAction): CalendarDayAction? =
@@ -17,5 +18,5 @@ sealed class CalendarDayAction {
 
 fun CalendarDayAction.formatForDebug() =
     when (this) {
-        is CalendarDayAction.ExampleAction -> "Example Action"
+        is CalendarDayAction.ItemTapped -> "Calendar item tapped: $calendarItem"
     }
