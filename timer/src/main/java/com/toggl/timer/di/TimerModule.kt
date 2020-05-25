@@ -27,6 +27,20 @@ import javax.inject.Singleton
 @Module(subcomponents = [TimerComponent::class])
 class TimerModule {
 
+    @Provides
+    internal fun timeEntriesLogSelector(
+        context: Context,
+        timeService: TimeService
+    ): TimeEntriesLogSelector {
+        val todayString = context.getString(R.string.today)
+        val yesterdayString = context.getString(R.string.yesterday)
+
+        return TimeEntriesLogSelector(
+            todayString,
+            yesterdayString,
+            timeService
+        )
+    }
     @ExperimentalCoroutinesApi
     @Provides
     internal fun timeEntriesLogStore(store: Store<TimerState, TimerAction>): Store<TimeEntriesLogState, TimeEntriesLogAction> =

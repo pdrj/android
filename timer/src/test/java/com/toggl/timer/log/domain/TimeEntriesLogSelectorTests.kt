@@ -4,8 +4,10 @@ import com.toggl.environment.services.time.TimeService
 import com.toggl.models.domain.Client
 import com.toggl.models.domain.Project
 import com.toggl.models.domain.TimeEntry
+import com.toggl.timer.common.CoroutineTest
 import com.toggl.timer.common.createTimeEntry
 import com.toggl.timer.generators.timeEntries
+import io.kotlintest.DisplayName
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -16,55 +18,27 @@ import io.kotlintest.matchers.numerics.shouldBeLessThanOrEqual
 import io.kotlintest.matchers.types.shouldNotBeTypeOf
 import io.kotlintest.properties.Gen
 import io.kotlintest.shouldBe
-import io.kotlintest.specs.FreeSpec
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 import org.threeten.bp.Duration
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.Year
 import org.threeten.bp.format.DateTimeFormatter
 
-class TimeEntriesLogSelectorTests : FreeSpec(
-{
-
-    val todayString = "Today"
-    val yesterdayString = "Yesterday"
-    val timeService = mockk<TimeService>()
-    val today = OffsetDateTime.now()
-    val localToday = today.toLocalDate()
-    val yesterday = localToday.minusDays(1)
-
-    val selectorToTest: (Map<Long, TimeEntry>, Map<Long, Project>, Map<Long, Client>, Set<Long>) -> List<TimeEntryViewModel> =
-        { timeEntries, projects, clients, entriesPendingDeletion ->
-            timeEntriesLogSelector(
-                timeEntries,
-                projects,
-                clients,
-                timeService,
-                todayString,
-                yesterdayString,
-                false,
-                setOf(),
-                entriesPendingDeletion
-            )
-        }
-
-    val groupSelectorToTest: (Map<Long, TimeEntry>, Map<Long, Project>, Map<Long, Client>, Set<Long>, Set<Long>) -> List<TimeEntryViewModel> =
-        { timeEntries, projects, clients, expandedGroups, entriesPendingDeletion ->
-            timeEntriesLogSelector(
-                timeEntries,
-                projects,
-                clients,
-                timeService,
-                todayString,
-                yesterdayString,
-                true,
-                expandedGroups,
-                entriesPendingDeletion
-            )
-        }
-
-    every { timeService.now() } returns today
+@ExperimentalCoroutinesApi
+@DisplayName("The TimeEntriesLogSelect")
+class TimeEntriesLogSelectorTests : CoroutineTest() {
+    private val todayString = "Today"
+    private val yesterdayString = "Yesterday"
+    private val today = OffsetDateTime.now()
+    private val timeService = mockk<TimeService> { every { now() } returns today }
+    private val localToday = today.toLocalDate()
+    private val yesterday = localToday.minusDays(1)
+    private val selector = TimeEntriesLogSelector(todayString, yesterdayString, timeService)
 
     /*
      *  Test Data
@@ -281,249 +255,320 @@ class TimeEntriesLogSelectorTests : FreeSpec(
         )
     ) + expectedYesterdayGroupedTimeEntries
 
-    "The TimeEntriesLogSelector" - {
-        "does not" - {
-            "add running time entries to the groups" - {
-                val timeEntriesButAllRunning = timeEntries.map { it.copy(duration = null) }
-                val groupedTimeEntries = selectorToTest(
-                    timeEntriesButAllRunning.associateBy { it.id },
-                    projectsMap,
-                    clientsMap,
-                    setOf()
-                )
+    @Nested
+    @DisplayName("does not")
+    inner class DoesNot {
 
-                groupedTimeEntries.size shouldBe 0
-            }
-            "add entries marked to be deleted to the groups" - {
-                val timeEntryMarkedForDeletion = createTimeEntry(
-                    0,
-                    "will be deleted",
-                    today,
-                    Duration.ofMinutes(30)
-                )
-                val timeEntriesPlusTheOneMarkedForDeletion = timeEntries + timeEntryMarkedForDeletion
-                val groupedTimeEntries = selectorToTest(
-                    timeEntriesPlusTheOneMarkedForDeletion.associateBy { it.id },
-                    projectsMap,
-                    clientsMap,
-                    setOf(0)
-                )
+        @Test
+        fun `does not add running time entries to the groups`() = runBlockingTest {
 
-                groupedTimeEntries.count { te -> te is FlatTimeEntryViewModel && te.description == "will be deleted" } shouldBe 0
-                groupedTimeEntries.count { te -> te is TimeEntryGroupViewModel && te.description == "will be deleted" } shouldBe 0
-            }
-            "create headers for days that have no time entries" - {
+            val timeEntriesButAllRunning = timeEntries.map { it.copy(duration = null) }
+            val state = createInitialState(
+                timeEntries = timeEntriesButAllRunning,
+                projects = projectsMap.values.toList(),
+                clients = clientsMap.values.toList()
+            )
 
-                val groupedTimeEntries = selectorToTest(
-                    timeEntriesMap,
-                    projectsMap,
-                    clientsMap,
-                    setOf()
-                )
-
-                val headers =
-                    groupedTimeEntries.filterIsInstance<DayHeaderViewModel>()
-                        .map { it.dayTitle }
-
-                val flatTimeEntryHeaders =
-                    groupedTimeEntries
-                        .asSequence()
-                        .filterIsInstance<FlatTimeEntryViewModel>()
-                        .map { it.startTime.toLocalDate() }
-                        .distinct()
-                        .map {
-                            when (it) {
-                                localToday -> todayString
-                                yesterday -> yesterdayString
-                                else -> it.format(
-                                    DateTimeFormatter.ofPattern("eee, dd MMM")
-                                )
-                            }
-                        }.distinct().toList()
-
-                headers shouldContainExactlyInAnyOrder flatTimeEntryHeaders
-            }
-            "group similar time entries when grouping is disabled" - {
-
-                val notGroupedTimeEntries = selectorToTest(
-                    similarTimeEntriesMap,
-                    projectsMap,
-                    clientsMap,
-                    setOf()
-                )
-
-                notGroupedTimeEntries.forEach {
-                    it.shouldNotBeTypeOf<TimeEntryGroupViewModel>()
-                }
-            }
+            val groupedTimeEntries = selector.select(state)
+            groupedTimeEntries.size shouldBe 0
         }
 
-        "the header titles are formatted" - {
-
-            "as the localized string for Today when the header is for the current day" - {
-                val groupedTimeEntries = selectorToTest(
-                    timeEntriesMap,
-                    projectsMap,
-                    clientsMap,
-                    setOf()
-                )
-
-                val headerTitles =
-                    groupedTimeEntries.filterIsInstance<DayHeaderViewModel>()
-                        .map { it.dayTitle }
-
-                headerTitles shouldContain todayString
-            }
-
-            "as the localized string for Today when the header is for the previous day" - {
-                val groupedTimeEntries = selectorToTest(
-                    timeEntriesMap,
-                    projectsMap,
-                    clientsMap,
-                    setOf()
-                )
-
-                val headerTitles =
-                    groupedTimeEntries.filterIsInstance<DayHeaderViewModel>()
-                        .map { it.dayTitle }
-
-                headerTitles shouldContain yesterdayString
-            }
-
-            "using eee, dd MMM for all other days" - {
-                val formatter = DateTimeFormatter.ofPattern("eee, dd MMM")
-
-                val groupedTimeEntries = selectorToTest(
-                    timeEntriesMap,
-                    projectsMap,
-                    clientsMap,
-                    setOf()
-                )
-
-                val headerTitles =
-                    groupedTimeEntries.filterIsInstance<DayHeaderViewModel>()
-                        .map { it.dayTitle }
-                        .filter { it != todayString && it != yesterdayString }
-                        .distinct()
-
-                val formattedDates =
-                    groupedTimeEntries
-                        .asSequence()
-                        .filterIsInstance<FlatTimeEntryViewModel>()
-                        .map { it.startTime.toLocalDate() }
-                        .distinct()
-                        .sortedDescending()
-                        .drop(2)
-                        .map { it.format(formatter) }
-                        .toList()
-
-                headerTitles shouldContainExactlyInAnyOrder formattedDates
-            }
+        @Test
+        fun `add entries marked to be deleted to the groups`() = runBlockingTest {
+            val timeEntryMarkedForDeletion = createTimeEntry(
+                0,
+                "will be deleted",
+                today,
+                Duration.ofMinutes(30)
+            )
+            val timeEntriesPlusTheOneMarkedForDeletion = timeEntries + timeEntryMarkedForDeletion
+            val state = createInitialState(
+                timeEntries = timeEntriesPlusTheOneMarkedForDeletion,
+                projects = projectsMap.values.toList(),
+                clients = clientsMap.values.toList(),
+                entriesPendingDeletion = setOf(0)
+            )
+            val groupedTimeEntries = selector.select(state)
+            groupedTimeEntries.count { te -> te is FlatTimeEntryViewModel && te.description == "will be deleted" } shouldBe 0
+            groupedTimeEntries.count { te -> te is TimeEntryGroupViewModel && te.description == "will be deleted" } shouldBe 0
         }
 
-        "groups similar time entries" - {
-            val groupedTimeEntries = groupSelectorToTest(
-                similarTimeEntriesMap,
-                projectsMap,
-                clientsMap,
-                setOf(),
-                setOf()
-            )
-            groupedTimeEntries shouldBe expectedGroupedTimeEntries
+        @Test
+        fun `create headers for days that have no time entries`() = runBlockingTest {
+
+            val state = createInitialState(
+                timeEntriesMap.values.toList(),
+                projectsMap.values.toList(),
+                clientsMap.values.toList()
+            ).copy(shouldGroup = false)
+
+            val timeEntryViewModels = selector.select(state)
+
+            val headers =
+                timeEntryViewModels.filterIsInstance<DayHeaderViewModel>()
+                    .map { it.dayTitle }
+
+            val flatTimeEntryHeaders =
+                timeEntryViewModels
+                    .asSequence()
+                    .filterIsInstance<FlatTimeEntryViewModel>()
+                    .map { it.startTime.toLocalDate() }
+                    .distinct()
+                    .map {
+                        when (it) {
+                            localToday -> todayString
+                            yesterday -> yesterdayString
+                            else -> it.format(
+                                DateTimeFormatter.ofPattern("eee, dd MMM")
+                            )
+                        }
+                    }.distinct().toList()
+
+            headers shouldContainExactlyInAnyOrder flatTimeEntryHeaders
         }
 
-        "groups random similar time entries from the same year so that there is" - {
-            val y = Year.of(2020)
-            val randomSimilarInOneYear = Gen.timeEntries(
-                description = "constant",
-                year = y
-            )
-                .random()
-                .take(10000)
-                .associateBy { it.id }
+        @Test
+        fun `group similar time entries when grouping is disabled`() = runBlockingTest {
+            val state = createInitialState(
+                timeEntriesMap.values.toList(),
+                projectsMap.values.toList(),
+                clientsMap.values.toList()
+            ).copy(shouldGroup = false)
 
-            val groupedTimeEntries = groupSelectorToTest(
-                randomSimilarInOneYear,
-                projectsMap,
-                clientsMap,
-                setOf(),
-                setOf()
-            )
-            val timeEntryViewModels = groupedTimeEntries.count { it is TimeEntryGroupViewModel || it is FlatTimeEntryViewModel }
-            val dayHeaderViewModels = groupedTimeEntries.count { it is DayHeaderViewModel }
+            val notGroupedTimeEntries = selector.select(state)
 
-            "no more day headers than days in a year" - {
-                dayHeaderViewModels shouldBeLessThanOrEqual y.length()
-            }
-
-            "no more time entries/groups than days in a year" - {
-                timeEntryViewModels shouldBeLessThanOrEqual y.length()
-            }
-
-            "the same number of time entries/groups as day headers" - {
-                timeEntryViewModels shouldBe dayHeaderViewModels
-            }
-        }
-
-        "handles group expanding so that" - {
-            val y = Year.of(2020)
-            val randomSimilarInOneYear = Gen.timeEntries(
-                description = "constant",
-                year = y
-            )
-                .random()
-                .take(10000)
-                .toList()
-
-            val randomExpandedGroups = randomSimilarInOneYear
-                .shuffled()
-                .take(1000)
-                .map(TimeEntry::similarityHashCode)
-                .toSet()
-
-            val groupedTimeEntries = groupSelectorToTest(
-                randomSimilarInOneYear.associateBy { it.id },
-                projectsMap,
-                clientsMap,
-                randomExpandedGroups,
-                setOf()
-            )
-
-            val allGroups = groupedTimeEntries.filterIsInstance<TimeEntryGroupViewModel>()
-
-            "groups that should be expanded are expanded" - {
-                val expandedGroups = allGroups.filter { randomExpandedGroups.contains(it.groupId) }
-                expandedGroups.forEach {
-                    it.isExpanded.shouldBeTrue()
-                }
-            }
-
-            "the correct number of individual FlatTimeEntryViewModel is present for every expanded group" - {
-                val expandedGroups = allGroups.filter { randomExpandedGroups.contains(it.groupId) }
-                expandedGroups.forEach { group ->
-                    val groupTimeEntries = groupedTimeEntries
-                        .filterIsInstance<FlatTimeEntryViewModel>()
-                        .filter { te -> group.timeEntryIds.contains(te.id) }
-                    groupTimeEntries.size shouldBeExactly group.timeEntryIds.size
-                }
-            }
-
-            "groups that shouldn't be expanded are not expanded" - {
-                val nonExpandedGroups = allGroups.filter { !randomExpandedGroups.contains(it.groupId) }
-                nonExpandedGroups.forEach {
-                    it.isExpanded.shouldBeFalse()
-                }
-            }
-
-            "there shouldn't be any individual FlatTimeEntryViewModel from unexpanded groups" - {
-                val nonExpandedGroups = allGroups.filter { !randomExpandedGroups.contains(it.groupId) }
-                nonExpandedGroups.forEach { group ->
-                    val groupTimeEntries = groupedTimeEntries
-                        .filterIsInstance<FlatTimeEntryViewModel>()
-                        .filter { te -> group.timeEntryIds.contains(te.id) }
-                    groupTimeEntries.shouldBeEmpty()
-                }
+            notGroupedTimeEntries.forEach {
+                it.shouldNotBeTypeOf<TimeEntryGroupViewModel>()
             }
         }
     }
-})
+
+    @Nested
+    @DisplayName("the header titles are formatted")
+    inner class TheHeaderTitles {
+
+        @Test
+        fun `as the localized string for Today when the header is for the current day`() = runBlockingTest {
+            val state = createInitialState(
+                timeEntriesMap.values.toList(),
+                projectsMap.values.toList(),
+                clientsMap.values.toList()
+            ).copy(shouldGroup = false)
+
+            val groupedTimeEntries = selector.select(state)
+
+            val headerTitles =
+                groupedTimeEntries.filterIsInstance<DayHeaderViewModel>()
+                    .map { it.dayTitle }
+
+            headerTitles shouldContain todayString
+        }
+
+        @Test
+        fun `as the localized string for Today when the header is for the previous day`() = runBlockingTest {
+            val state = createInitialState(
+                timeEntriesMap.values.toList(),
+                projectsMap.values.toList(),
+                clientsMap.values.toList()
+            ).copy(shouldGroup = false)
+
+            val timeEntryViewModels = selector.select(state)
+
+            val headerTitles =
+                timeEntryViewModels.filterIsInstance<DayHeaderViewModel>()
+                    .map { it.dayTitle }
+
+            headerTitles shouldContain yesterdayString
+        }
+
+        @Test
+        fun `using eee, dd MMM for all other days`() = runBlockingTest {
+            val formatter = DateTimeFormatter.ofPattern("eee, dd MMM")
+
+            val state = createInitialState(
+                timeEntriesMap.values.toList(),
+                projectsMap.values.toList(),
+                clientsMap.values.toList()
+            ).copy(shouldGroup = false)
+
+            val timeEntryViewModels = selector.select(state)
+
+            val headerTitles =
+                timeEntryViewModels.filterIsInstance<DayHeaderViewModel>()
+                    .map { it.dayTitle }
+                    .filter { it != todayString && it != yesterdayString }
+                    .distinct()
+
+            val formattedDates =
+                timeEntryViewModels
+                    .asSequence()
+                    .filterIsInstance<FlatTimeEntryViewModel>()
+                    .map { it.startTime.toLocalDate() }
+                    .distinct()
+                    .sortedDescending()
+                    .drop(2)
+                    .map { it.format(formatter) }
+                    .toList()
+
+            headerTitles shouldContainExactlyInAnyOrder formattedDates
+        }
+    }
+
+    @Test
+    fun `groups similar time entries`() = runBlockingTest {
+            val state = createInitialState(
+                similarTimeEntriesMap.values.toList(),
+                projectsMap.values.toList(),
+                clientsMap.values.toList()
+            )
+            val groupedTimeEntries = selector.select(state)
+            groupedTimeEntries shouldBe expectedGroupedTimeEntries
+        }
+
+    @Nested
+    @DisplayName("groups random similar time entries from the same year so that there is")
+    inner class GroupsRandomSimilarEntries {
+
+        private val y = Year.of(2020)
+        private val randomSimilarInOneYear = Gen.timeEntries(
+            description = "constant",
+            year = y
+        ).random().take(10000).toList()
+
+        @Test
+        fun `no more day headers than days in a year`() = runBlockingTest {
+            val state = createInitialState(
+                randomSimilarInOneYear,
+                projectsMap.values.toList(),
+                clientsMap.values.toList()
+            )
+
+            val groupedTimeEntries = selector.select(state)
+            val dayHeaderViewModels = groupedTimeEntries.count { it is DayHeaderViewModel }
+            dayHeaderViewModels shouldBeLessThanOrEqual y.length()
+        }
+
+        @Test
+        fun `no more time entries or groups than days in a year`() = runBlockingTest {
+            val state = createInitialState(
+                randomSimilarInOneYear,
+                projectsMap.values.toList(),
+                clientsMap.values.toList()
+            )
+
+            val groupedTimeEntries = selector.select(state)
+            val timeEntryViewModels = groupedTimeEntries.count { it is TimeEntryGroupViewModel || it is FlatTimeEntryViewModel }
+            timeEntryViewModels shouldBeLessThanOrEqual y.length()
+        }
+
+        @Test
+        fun `the same number of time entries or groups as day headers`() = runBlockingTest {
+            val randomSimilarInOneYear = Gen.timeEntries(
+                description = "constant",
+                year = Year.of(2020)
+            ).random().take(10000).toList()
+
+            val state = createInitialState(
+                randomSimilarInOneYear,
+                projectsMap.values.toList(),
+                clientsMap.values.toList()
+            )
+
+            val groupedTimeEntries = selector.select(state)
+            val timeEntryViewModels = groupedTimeEntries.count { it is TimeEntryGroupViewModel || it is FlatTimeEntryViewModel }
+            val dayHeaderViewModels = groupedTimeEntries.count { it is DayHeaderViewModel }
+            timeEntryViewModels shouldBe dayHeaderViewModels
+        }
+    }
+
+    @Nested
+    @DisplayName("handles group expanding so that")
+    inner class HandlesGroupExpanding {
+        private val y = Year.of(2020)
+        private val randomSimilarInOneYear = Gen.timeEntries(
+            description = "constant",
+            year = y
+        ).random().take(10000).toList()
+
+        private val randomExpandedGroups = randomSimilarInOneYear
+            .shuffled()
+            .take(1000)
+            .map(TimeEntry::similarityHashCode)
+            .toSet()
+
+        @Test
+        fun `groups that should be expanded are expanded`() = runBlockingTest {
+            val state = createInitialState(
+                randomSimilarInOneYear,
+                projectsMap.values.toList(),
+                clientsMap.values.toList(),
+                randomExpandedGroups
+            )
+            val groupedTimeEntries = selector.select(state)
+
+            val allGroups = groupedTimeEntries.filterIsInstance<TimeEntryGroupViewModel>()
+            val expandedGroups = allGroups.filter { randomExpandedGroups.contains(it.groupId) }
+            expandedGroups.forEach {
+                it.isExpanded.shouldBeTrue()
+            }
+        }
+
+        @Test
+        fun `the correct number of individual FlatTimeEntryViewModel is present for every expanded group`() = runBlockingTest {
+            val state = createInitialState(
+                randomSimilarInOneYear,
+                projectsMap.values.toList(),
+                clientsMap.values.toList(),
+                randomExpandedGroups
+            )
+            val groupedTimeEntries = selector.select(state)
+
+            val allGroups = groupedTimeEntries.filterIsInstance<TimeEntryGroupViewModel>()
+                val expandedGroups = allGroups.filter { randomExpandedGroups.contains(it.groupId) }
+                expandedGroups.forEach { group ->
+                val groupTimeEntries = groupedTimeEntries
+                    .filterIsInstance<FlatTimeEntryViewModel>()
+                    .filter { te -> group.timeEntryIds.contains(te.id) }
+                groupTimeEntries.size shouldBeExactly group.timeEntryIds.size
+            }
+        }
+
+        @Test
+        fun `groups that shouldn't be expanded are not expanded`() = runBlockingTest {
+            val state = createInitialState(
+                randomSimilarInOneYear,
+                projectsMap.values.toList(),
+                clientsMap.values.toList(),
+                randomExpandedGroups
+            )
+
+            val groupedTimeEntries = selector.select(state)
+
+            val allGroups = groupedTimeEntries.filterIsInstance<TimeEntryGroupViewModel>()
+            val nonExpandedGroups = allGroups.filter { !randomExpandedGroups.contains(it.groupId) }
+            nonExpandedGroups.forEach {
+                it.isExpanded.shouldBeFalse()
+            }
+        }
+
+        @Test
+        fun `there shouldn't be any individual FlatTimeEntryViewModel from unexpanded groups`() = runBlockingTest {
+            val state = createInitialState(
+                randomSimilarInOneYear,
+                projectsMap.values.toList(),
+                clientsMap.values.toList(),
+                randomExpandedGroups
+            )
+            val groupedTimeEntries = selector.select(state)
+
+            val allGroups = groupedTimeEntries.filterIsInstance<TimeEntryGroupViewModel>()
+            val nonExpandedGroups = allGroups.filter { !randomExpandedGroups.contains(it.groupId) }
+            nonExpandedGroups.forEach { group ->
+                val groupTimeEntries = groupedTimeEntries
+                    .filterIsInstance<FlatTimeEntryViewModel>()
+                    .filter { te -> group.timeEntryIds.contains(te.id) }
+                groupTimeEntries.shouldBeEmpty()
+            }
+        }
+    }
+}

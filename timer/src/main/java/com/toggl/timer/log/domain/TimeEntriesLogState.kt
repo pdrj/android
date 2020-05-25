@@ -14,7 +14,8 @@ data class TimeEntriesLogState(
     val clients: Map<Long, Client>,
     val expandedGroupIds: Set<Long>,
     val editableTimeEntry: EditableTimeEntry?,
-    val entriesPendingDeletion: Set<Long>
+    val entriesPendingDeletion: Set<Long>,
+    val shouldGroup: Boolean = true
 ) {
     companion object {
         fun fromTimerState(timerState: TimerState) =
