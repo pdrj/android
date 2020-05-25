@@ -1,5 +1,6 @@
 package com.toggl.calendar.common
 
+import com.toggl.calendar.calendarday.domain.CalendarDayState
 import com.toggl.environment.services.calendar.CalendarEvent
 import com.toggl.models.domain.TimeEntry
 import org.threeten.bp.Duration
@@ -43,4 +44,14 @@ fun createCalendarEvent(
     description,
     color,
     calendarId
+)
+
+fun createInitialState(
+    timeEntries: List<TimeEntry> = listOf(),
+    calendarEvents: List<CalendarEvent> = listOf(),
+    date: OffsetDateTime = OffsetDateTime.now()
+) = CalendarDayState(
+    timeEntries.associateBy { it.id },
+    calendarEvents.associateBy { it.id },
+    date
 )

@@ -1,24 +1,26 @@
 package com.toggl.calendar.calendarday.domain
 
+import com.toggl.architecture.core.Selector
 import com.toggl.calendar.common.domain.CalendarItem
-import com.toggl.environment.services.calendar.CalendarEvent
-import com.toggl.models.domain.TimeEntry
 import org.threeten.bp.OffsetDateTime
+import javax.inject.Inject
+import javax.inject.Singleton
 
-fun calendarItemsSelector(
-    calendarLayoutCalculator: CalendarLayoutCalculator,
-    timeEntries: Map<Long, TimeEntry>,
-    calendarEvents: List<CalendarEvent>,
-    date: OffsetDateTime
-): List<CalendarItem> {
-    val localDate = date.toLocalDate()
-    fun isOnDate(startTime: OffsetDateTime, endTime: OffsetDateTime?) =
-        startTime.toLocalDate() == localDate && (endTime == null || endTime.toLocalDate() == localDate)
+@Singleton
+class CalendarItemsSelector @Inject constructor(
+    private val calendarLayoutCalculator: CalendarLayoutCalculator
+): Selector<CalendarDayState, List<CalendarItem>> {
 
-    val filteredTimeEntries = timeEntries.filterValues { isOnDate(it.startTime, it.startTime + it.duration) }
-    val filteredEvents = calendarEvents.filter { isOnDate(it.startTime, it.startTime + it.duration) }
-    return filteredTimeEntries
-        .values.map { CalendarItem.TimeEntry(it) }
-        .plus(filteredEvents.map { CalendarItem.CalendarEvent(it) })
-        .run(calendarLayoutCalculator::calculateLayoutAttributes)
+    override suspend fun select(state: CalendarDayState): List<CalendarItem> {
+        val localDate = state.date.toLocalDate()
+        fun isOnDate(startTime: OffsetDateTime, endTime: OffsetDateTime?) =
+            startTime.toLocalDate() == localDate && (endTime == null || endTime.toLocalDate() == localDate)
+
+        val filteredTimeEntries = state.timeEntries.filterValues { isOnDate(it.startTime, it.startTime + it.duration) }
+        val filteredEvents = state.events.filterValues { isOnDate(it.startTime, it.startTime + it.duration) }
+        return filteredTimeEntries
+            .values.map { CalendarItem.TimeEntry(it) }
+            .plus(filteredEvents.values.map { CalendarItem.CalendarEvent(it) })
+            .run(calendarLayoutCalculator::calculateLayoutAttributes)
+    }
 }

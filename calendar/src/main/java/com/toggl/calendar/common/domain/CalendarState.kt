@@ -13,9 +13,10 @@ data class CalendarState(
 ) {
     data class LocalState internal constructor(
         internal val selectedDate: OffsetDateTime,
+        internal val calendarEvents: Map<String, CalendarEvent>,
         internal val selectedItem: Either<TimeEntry, CalendarEvent>?
     ) {
-        constructor() : this(OffsetDateTime.now(), null)
+        constructor() : this(OffsetDateTime.now(), mapOf(), null)
     }
 
     companion object

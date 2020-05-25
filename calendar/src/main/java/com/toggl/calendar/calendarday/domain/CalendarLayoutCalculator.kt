@@ -8,11 +8,13 @@ import org.threeten.bp.Duration
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.absoluteValue
 
 typealias CalendarItemGroup = MutableList<CalendarItem>
 typealias CalendarItemGroups = MutableList<CalendarItemGroup>
 
+@Singleton
 class CalendarLayoutCalculator @Inject constructor(private val timeService: TimeService) {
 
     private val offsetFromNow: Duration = Duration.ofMinutes(7)
