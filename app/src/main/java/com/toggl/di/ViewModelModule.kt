@@ -2,7 +2,9 @@ package com.toggl.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.toggl.calendar.ui.CalendarStoreViewModel
+import com.toggl.calendar.calendarday.ui.CalendarDayStoreViewModel
+import com.toggl.calendar.contextualmenu.ui.ContextualMenuStoreViewModel
+import com.toggl.calendar.datepicker.ui.CalendarDatePickerStoreViewModel
 import com.toggl.onboarding.ui.LoginViewModel
 import com.toggl.timer.log.ui.TimeEntriesLogStoreViewModel
 import com.toggl.timer.project.ui.ProjectStoreViewModel
@@ -42,8 +44,18 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(CalendarStoreViewModel::class)
-    abstract fun bindCalendarStoreViewModel(viewModel: CalendarStoreViewModel): ViewModel
+    @ViewModelKey(CalendarDayStoreViewModel::class)
+    abstract fun bindCalendarDayStoreViewModel(viewModel: CalendarDayStoreViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CalendarDatePickerStoreViewModel::class)
+    abstract fun bindCalendarDatePickerStoreViewModel(viewModel: CalendarDatePickerStoreViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ContextualMenuStoreViewModel::class)
+    abstract fun bindContextualMenuStoreViewModel(viewModel: ContextualMenuStoreViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: TogglViewModelFactory): ViewModelProvider.Factory

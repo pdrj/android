@@ -5,7 +5,7 @@ import com.toggl.architecture.core.Effect
 import com.toggl.architecture.core.HigherOrderReducer
 import com.toggl.architecture.core.Reducer
 import com.toggl.architecture.core.MutableValue
-import com.toggl.calendar.domain.formatForDebug
+import com.toggl.calendar.common.domain.formatForDebug
 import com.toggl.domain.AppAction
 import com.toggl.domain.AppState
 import com.toggl.domain.loading.formatForDebug

@@ -1,7 +1,7 @@
 package com.toggl.di
 
 import com.toggl.architecture.core.Reducer
-import com.toggl.calendar.domain.CalendarReducer
+import com.toggl.calendar.di.CalendarReducer
 import com.toggl.domain.AppAction
 import com.toggl.domain.AppState
 import com.toggl.domain.reducers.AnalyticsReducer

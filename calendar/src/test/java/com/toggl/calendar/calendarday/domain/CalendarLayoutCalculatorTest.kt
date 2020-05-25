@@ -1,9 +1,8 @@
-package com.toggl.calendar.ui
+package com.toggl.calendar.calendarday.domain
 
-import com.toggl.calendar.domain.CalendarItem
-import com.toggl.calendar.domain.CalendarLayoutCalculator
-import com.toggl.calendar.domain.duration
-import com.toggl.calendar.domain.startTime
+import com.toggl.calendar.common.domain.CalendarItem
+import com.toggl.calendar.common.domain.duration
+import com.toggl.calendar.common.domain.startTime
 import com.toggl.environment.services.calendar.CalendarEvent
 import com.toggl.environment.services.time.TimeService
 import com.toggl.models.domain.TimeEntry

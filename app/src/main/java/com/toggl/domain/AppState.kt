@@ -1,6 +1,7 @@
 package com.toggl.domain
 
 import com.toggl.architecture.Loadable
+import com.toggl.calendar.common.domain.CalendarState
 import com.toggl.models.domain.Client
 import com.toggl.models.domain.Project
 import com.toggl.models.domain.Tag
@@ -20,5 +21,6 @@ data class AppState(
     val tags: Map<Long, Tag> = mapOf(),
     val timeEntries: Map<Long, TimeEntry> = mapOf(),
     val onboardingLocalState: OnboardingState.LocalState = OnboardingState.LocalState(),
-    val timerLocalState: TimerState.LocalState = TimerState.LocalState()
+    val timerLocalState: TimerState.LocalState = TimerState.LocalState(),
+    val calendarLocalState: CalendarState.LocalState = CalendarState.LocalState()
 )

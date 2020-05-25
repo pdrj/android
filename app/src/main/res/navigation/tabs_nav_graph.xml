@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/calendar"
-        android:name="com.toggl.calendar.ui.CalendarFragment"
+        android:name="com.toggl.calendar.calendarday.ui.CalendarDayFragment"
         android:label="CalendarFragment">
         <deepLink app:uri="@string/deep_link_calendar" />
     </fragment>

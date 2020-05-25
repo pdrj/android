@@ -1,10 +1,8 @@
-package com.toggl.calendar.ui
+package com.toggl.calendar.calendarday.domain
 
 import com.toggl.calendar.common.createCalendarEvent
 import com.toggl.calendar.common.createTimeEntry
-import com.toggl.calendar.domain.CalendarItem
-import com.toggl.calendar.domain.CalendarLayoutCalculator
-import com.toggl.calendar.domain.calendarItemsSelector
+import com.toggl.calendar.common.domain.CalendarItem
 import com.toggl.environment.services.time.TimeService
 import io.mockk.every
 import io.mockk.mockk
@@ -17,10 +15,11 @@ import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneOffset
 
 @DisplayName("The calendarItemsSelector")
-internal class CalendarItemsSelectorKtTest {
+internal class CalendarItemsSelectorTest {
 
     private val timeService: TimeService = mockk()
-    private val calendarLayoutCalculator = CalendarLayoutCalculator(timeService)
+    private val calendarLayoutCalculator =
+        CalendarLayoutCalculator(timeService)
 
     init {
         every { timeService.now() } returns OffsetDateTime.now()

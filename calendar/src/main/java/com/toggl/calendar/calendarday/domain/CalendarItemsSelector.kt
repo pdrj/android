@@ -1,5 +1,6 @@
-package com.toggl.calendar.domain
+package com.toggl.calendar.calendarday.domain
 
+import com.toggl.calendar.common.domain.CalendarItem
 import com.toggl.environment.services.calendar.CalendarEvent
 import com.toggl.models.domain.TimeEntry
 import org.threeten.bp.OffsetDateTime

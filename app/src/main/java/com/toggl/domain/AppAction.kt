@@ -1,6 +1,6 @@
 package com.toggl.domain
 
-import com.toggl.calendar.domain.CalendarAction
+import com.toggl.calendar.common.domain.CalendarAction
 import com.toggl.domain.loading.LoadingAction
 import com.toggl.onboarding.domain.actions.OnboardingAction
 import com.toggl.timer.common.domain.TimerAction

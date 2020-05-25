@@ -7,8 +7,8 @@ import com.toggl.architecture.StoreScopeProvider
 import com.toggl.architecture.core.FlowStore
 import com.toggl.architecture.core.Reducer
 import com.toggl.architecture.core.Store
-import com.toggl.calendar.domain.CalendarAction
-import com.toggl.calendar.domain.CalendarState
+import com.toggl.calendar.common.domain.CalendarAction
+import com.toggl.calendar.common.domain.CalendarState
 import com.toggl.domain.AppAction
 import com.toggl.domain.AppState
 import com.toggl.domain.mappings.mapAppStateToCalendarState

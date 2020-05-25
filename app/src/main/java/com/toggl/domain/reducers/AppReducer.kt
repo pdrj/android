@@ -3,7 +3,7 @@ package com.toggl.domain.reducers
 import com.toggl.architecture.core.Reducer
 import com.toggl.architecture.core.combine
 import com.toggl.architecture.core.pullback
-import com.toggl.calendar.domain.CalendarReducer
+import com.toggl.calendar.di.CalendarReducer
 import com.toggl.domain.AppAction
 import com.toggl.domain.AppState
 import com.toggl.domain.loading.LoadingReducer
