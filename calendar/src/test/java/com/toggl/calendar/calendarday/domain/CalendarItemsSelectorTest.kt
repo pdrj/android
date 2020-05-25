@@ -60,7 +60,7 @@ internal class CalendarItemsSelectorTest {
         }
 
         @Test
-        fun `returns an empty list when there are no time entries on the specified date`() = runBlockingTest  {
+        fun `returns an empty list when there are no time entries on the specified date`() = runBlockingTest {
             val date = OffsetDateTime.of(2020, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
             val notExpectedTimeEntries = (11..20L).map {
                 createTimeEntry(
@@ -82,7 +82,7 @@ internal class CalendarItemsSelectorTest {
         }
 
         @Test
-        fun `selects only time entries that start and end on the specified date`() = runBlockingTest  {
+        fun `selects only time entries that start and end on the specified date`() = runBlockingTest {
             val date = OffsetDateTime.of(2020, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
             val expectedTimeEntries = (1..10L).map {
                 createTimeEntry(
@@ -125,7 +125,7 @@ internal class CalendarItemsSelectorTest {
     @DisplayName("when selecting calendar events only")
     inner class CalendarEventsOnly {
         @Test
-        fun `selects only events from the specified date`() = runBlockingTest  {
+        fun `selects only events from the specified date`() = runBlockingTest {
             val date = OffsetDateTime.of(2020, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
             val expectedEvents = (1..10L).map {
                 createCalendarEvent(
@@ -203,7 +203,7 @@ internal class CalendarItemsSelectorTest {
             }
 
             val state = createInitialState(
-                calendarEvents =expectedEvents + notExpectedEventsThatStartTheDayBefore + notExpectedEventsThatEndTheDayAfter,
+                calendarEvents = expectedEvents + notExpectedEventsThatStartTheDayBefore + notExpectedEventsThatEndTheDayAfter,
                 date = date
             )
             val selectedTimeEntries = selector.select(state)
@@ -217,7 +217,7 @@ internal class CalendarItemsSelectorTest {
     @DisplayName("when selecting time entries & calendar events")
     inner class MixAndMatch {
         @Test
-        fun `selects only time entries & events from the specified date`()  = runBlockingTest {
+        fun `selects only time entries & events from the specified date`() = runBlockingTest {
             val date = OffsetDateTime.of(2020, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
             val expectedTimeEntries = (1..10L).map {
                 createTimeEntry(
@@ -269,7 +269,7 @@ internal class CalendarItemsSelectorTest {
         }
 
         @Test
-        fun `returns an empty list when there are no time entries or events on the specified date`() = runBlockingTest  {
+        fun `returns an empty list when there are no time entries or events on the specified date`() = runBlockingTest {
             val date = OffsetDateTime.of(2020, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
             val notExpectedTimeEntries = (11..20L).map {
                 createTimeEntry(
@@ -298,7 +298,7 @@ internal class CalendarItemsSelectorTest {
         }
 
         @Test
-        fun `selects only time entries & events that start and end on the specified date`() = runBlockingTest  {
+        fun `selects only time entries & events that start and end on the specified date`() = runBlockingTest {
             val date = OffsetDateTime.of(2020, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
             val expectedTimeEntries = (1..10L).map {
                 createTimeEntry(

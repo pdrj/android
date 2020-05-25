@@ -9,7 +9,7 @@ import javax.inject.Singleton
 @Singleton
 class CalendarItemsSelector @Inject constructor(
     private val calendarLayoutCalculator: CalendarLayoutCalculator
-): Selector<CalendarDayState, List<CalendarItem>> {
+) : Selector<CalendarDayState, List<CalendarItem>> {
 
     override suspend fun select(state: CalendarDayState): List<CalendarItem> {
         val localDate = state.date.toLocalDate()
