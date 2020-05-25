@@ -4,6 +4,7 @@ import com.toggl.environment.services.calendar.CalendarEvent
 import com.toggl.models.domain.TimeEntry
 import org.threeten.bp.Duration
 import org.threeten.bp.OffsetDateTime
+import com.toggl.models.domain.EditableTimeEntry
 
 typealias TimeEntryItem = TimeEntry
 typealias CalendarEventItem = CalendarEvent
@@ -38,4 +39,14 @@ fun CalendarItem.endTime(): OffsetDateTime? = when (this) {
 fun CalendarItem.duration(): Duration? = when (this) {
     is CalendarItem.TimeEntry -> timeEntry.duration
     is CalendarItem.CalendarEvent -> calendarEvent.duration
+}
+
+fun CalendarItem.toSelectedCalendarItem(): SelectedCalendarItem = when (this) {
+    is CalendarItem.TimeEntry -> SelectedCalendarItem.SelectedTimeEntry(EditableTimeEntry.fromSingle(this.timeEntry))
+    is CalendarItem.CalendarEvent -> SelectedCalendarItem.SelectedCalendarEvent(this.calendarEvent)
+}
+
+sealed class SelectedCalendarItem() {
+    data class SelectedTimeEntry(val editableTimeEntry: EditableTimeEntry) : SelectedCalendarItem()
+    data class SelectedCalendarEvent(val calendarEvent: CalendarEventItem) : SelectedCalendarItem()
 }

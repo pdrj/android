@@ -8,7 +8,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.toggl.calendar.R
 import com.toggl.calendar.di.CalendarComponentProvider
-import com.toggl.calendar.domain.CalendarAction
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -28,7 +27,5 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        store.dispatch(CalendarAction.ExampleAction)
     }
 }

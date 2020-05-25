@@ -13,8 +13,8 @@ class CalendarReducer @Inject constructor() : Reducer<CalendarState, CalendarAct
         action: CalendarAction
     ): List<Effect<CalendarAction>> =
         when (action) {
-            is CalendarAction.ExampleAction -> state.mutateWithoutEffects {
-                copy(toBeDeleted = "DELETE THIS ALREADY")
+            is CalendarAction.ItemTapped -> state.mutateWithoutEffects {
+                copy(selectedItem = action.calendarItem.toSelectedCalendarItem())
             }
         }
 }
